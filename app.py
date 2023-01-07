@@ -1,4 +1,5 @@
 import os
+import itertools
 import numpy as np
 import pandas as pd
 import boto3
@@ -12,6 +13,7 @@ WORK_DIRECTORY = os.environ["WORK_DIRECTORY"]
 FRAMEWORK_VERSION = os.environ["FRAMEWORK_VERSION"]
 SCRIPT_PATH = os.environ["SCRIPT_PATH"]
 INSTANCE_TYPE = os.environ["INSTANCE_TYPE"]
+INITIAL_INSTANCE_COUNT = int(os.environ["INITIAL_INSTANCE_COUNT"])
 
 def get_sg_session():
     sagemaker_session = sagemaker.Session()
@@ -47,8 +49,31 @@ def train_model(sg_session, train_input):
         )
     z = sklearn.fit({"train": train_input})
     print (z)
+    return sklearn
+
+def gen_test_data():
+    shape = pd.read_csv("data/iris.csv", header=None)
+    a = [50 * i for i in range(3)]
+    b = [40 + i for i in range(10)]
+    indices = [i + j for i, j in itertools.product(a, b)]
+
+    test_data = shape.iloc[indices[:-1]]
+    test_X = test_data.iloc[:, 1:]
+    test_y = test_data.iloc[:, 0]
+    test_data_dict = {"test_X": test_X, "test_y": test_y}
+    return test_data_dict
+
+def serve_model(trained_model, test_data):
+    predictor = trained_model.deploy(initial_instance_count=INITIAL_INSTANCE_COUNT, instance_type=INSTANCE_TYPE)
+    print(predictor.predict(test_data["test_X"].values))
+    print(test_data["test_y"].values)
+    predictor.delete_endpoint()
+
+
 
 if __name__ == "__main__":
     sg_session = get_sg_session()
     train_input = load_data(sg_session)
-    train_model(sg_session, train_input)
+    trained_model = train_model(sg_session, train_input)
+    test_data = gen_test_data()
+    serve_model(trained_model, test_data)
