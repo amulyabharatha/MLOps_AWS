@@ -9,15 +9,15 @@ from sagemaker.sklearn.estimator import SKLearn
 
 # S3 prefix
 role = os.environ["SG_ROLE"]
-PREFIX = os.environ["PREFIX"]
-WORK_DIRECTORY = os.environ["WORK_DIRECTORY"]
-FRAMEWORK_VERSION = os.environ["FRAMEWORK_VERSION"]
-SCRIPT_PATH = os.environ["SCRIPT_PATH"]
-INSTANCE_TYPE = os.environ["INSTANCE_TYPE"]
-INITIAL_INSTANCE_COUNT = int(os.environ["INITIAL_INSTANCE_COUNT"])
-USE_SPOT_INSTANCES = True if os.environ["USE_SPOT_INSTANCES"]=="yes" else False
-MAX_RUN = int(os.environ["MAX_RUN"])
-MAX_WAIT = 7200 if USE_SPOT_INSTANCES else None
+PREFIX = os.environ.get("PREFIX", "DEMO-scikit-iris")
+WORK_DIRECTORY = os.environ.get("WORK_DIRECTORY", "data")
+FRAMEWORK_VERSION = os.environ.get("FRAMEWORK_VERSION", "1.0-1")
+SCRIPT_PATH = os.environ.get("SCRIPT_PATH", "train.py")
+INSTANCE_TYPE = os.environ.get("INSTANCE_TYPE", "ml.m5.large")
+INITIAL_INSTANCE_COUNT = int(os.environ.get("INITIAL_INSTANCE_COUNT", 1))
+USE_SPOT_INSTANCES = True
+MAX_RUN = 3600
+MAX_WAIT = 7200
 
 
 def get_sg_session():
