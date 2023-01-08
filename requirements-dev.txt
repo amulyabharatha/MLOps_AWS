@@ -3,3 +3,5 @@ pandas
 numpy
 ipython
 scikit-learn
+black
+pylint
