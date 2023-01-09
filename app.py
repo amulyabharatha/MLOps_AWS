@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import boto3
 import sagemaker
-from sagemaker.sklearn.estimator import SKLearn
+from sagemaker.sklearn.estimator import SKLearn, SKLearnModel
 
 # S3 prefix
 role = os.environ["SG_ROLE"]
@@ -78,9 +78,14 @@ def train_model(session_details, train_input):
         max_wait=MAX_WAIT,
         checkpoint_s3_uri=checkpoint_s3_uri,
     )
-    z = sklearn.fit({"train": train_input})
-    print(z)
-    return sklearn
+    sklearn.fit({"train": train_input})
+    image_uri = sklearn.image_uri
+    model_path = sklearn.model_data
+    model_data = {"image_uri": sklearn.image_uri,
+                  "model_path": sklearn.model_data,
+                  "estimator": sklearn}
+    print(image_uri, model_path)
+    return model_data
 
 
 def gen_test_data():
@@ -96,10 +101,21 @@ def gen_test_data():
     return test_data_dict
 
 
-def serve_model(trained_model, test_data):
-    predictor = trained_model.deploy(
+def serve_model(model_data, test_data):
+    estimator = model_data["estimator"]
+    predictor = estimator.deploy(
         initial_instance_count=INITIAL_INSTANCE_COUNT, instance_type=INSTANCE_TYPE
     )
+    print(predictor.predict(test_data["test_X"].values))
+    print(test_data["test_y"].values)
+    predictor.delete_endpoint()
+
+def serve_saved_model(model_data, test_data):
+    sklearn_model = SKLearnModel(model_data=model_data['model_path'],
+                                 role=role,
+                                 entry_point="train.py",
+                                 framework_version=FRAMEWORK_VERSION)
+    predictor = sklearn_model.deploy(instance_type=INSTANCE_TYPE, initial_instance_count=1)
     print(predictor.predict(test_data["test_X"].values))
     print(test_data["test_y"].values)
     predictor.delete_endpoint()
@@ -108,6 +124,8 @@ def serve_model(trained_model, test_data):
 if __name__ == "__main__":
     session_details = get_sg_session()
     train_input = load_data(session_details["sg_session"])
-    trained_model = train_model(session_details, train_input)
+    #model_data = train_model(session_details, train_input)
     test_data = gen_test_data()
-    serve_model(trained_model, test_data)
+    #serve_model(model_data, test_data)
+    model_data = {"model_path": "s3://sagemaker-us-east-1-316381839854/sagemaker-scikit-learn-2023-01-08-18-35-09-467/output/model.tar.gz"}
+    serve_saved_model(model_data, test_data)
