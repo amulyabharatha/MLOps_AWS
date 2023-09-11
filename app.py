@@ -42,15 +42,16 @@ def load_data(sg_session):
     df_iris[4] = df_iris[4].map(
         {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}
     )
+    print("iris to numpy")
     iris = df_iris[[4, 0, 1, 2, 3]].to_numpy()
     np.savetxt(
         "./data/iris.csv", iris, delimiter=",", fmt="%1.1f, %1.3f, %1.3f, %1.3f, %1.3f"
     )
-    print(df_iris.head())
+    print("df_iris.head() is:",df_iris.head())
     train_input = sg_session.upload_data(
         WORK_DIRECTORY, key_prefix="{}/{}".format(PREFIX, WORK_DIRECTORY)
     )
-    print(train_input)
+    print("training input is:",train_input)
     return train_input
 
 print("training model started")
