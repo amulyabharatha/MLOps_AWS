@@ -23,8 +23,8 @@ MAX_WAIT = 7200
 def get_sg_session():
     sagemaker_session = sagemaker.Session()
     bucket = sagemaker.Session().default_bucket()
-    print(bucket)
-    print(sagemaker_session)
+    print("bucket name is",bucket)
+    print("sagemaker_session name is",sagemaker_session)
     session_details = {"sg_session": sagemaker_session, "bucket_name": bucket}
     return session_details
 
