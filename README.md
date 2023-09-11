@@ -1,4 +1,4 @@
-# Basic CICD with Sagemaker
+# Basic CICD with Sagemaker AWS
 
 ## Instructions
 * Clone repo
