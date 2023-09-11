@@ -18,17 +18,18 @@ INITIAL_INSTANCE_COUNT = int(os.environ.get("INITIAL_INSTANCE_COUNT", 1))
 USE_SPOT_INSTANCES = True
 MAX_RUN = 3600
 MAX_WAIT = 7200
-
-
+#getting session details
+print("gettting sg session details")
 def get_sg_session():
     sagemaker_session = sagemaker.Session()
     bucket = sagemaker.Session().default_bucket()
     print("bucket name is",bucket)
     print("sagemaker_session name is",sagemaker_session)
     session_details = {"sg_session": sagemaker_session, "bucket_name": bucket}
+    print("sg session details are:", session_details)
     return session_details
 
-
+print("loading data sg_session data.csv")
 def load_data(sg_session):
     os.makedirs("./data", exist_ok=True)
     s3_client = boto3.client("s3")
@@ -36,6 +37,7 @@ def load_data(sg_session):
         f"sagemaker-sample-files", "datasets/tabular/iris/iris.data", "./data/iris.csv"
     )
 
+    print("reading iris csv file")
     df_iris = pd.read_csv("./data/iris.csv", header=None)
     df_iris[4] = df_iris[4].map(
         {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}
@@ -51,7 +53,7 @@ def load_data(sg_session):
     print(train_input)
     return train_input
 
-
+print("training model started")
 def train_model(session_details, train_input):
     job_name = "DEMO-xgboost-spot-1-" + time.strftime(
         "%Y-%m-%d-%H-%M-%S", time.gmtime()
