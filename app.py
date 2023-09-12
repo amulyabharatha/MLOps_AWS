@@ -59,7 +59,7 @@ def train_model(session_details, train_input):
     job_name = "DEMO-xgboost-spot-1-" + time.strftime(
         "%Y-%m-%d-%H-%M-%S", time.gmtime()
     )
-    print("job_name is:" job_name)
+    print("job_name is:", job_name)
     bucket = session_details["bucket_name"]
     sg_session = session_details["sg_session"]
     print("bucket and sg_session name from training job is:" ,bucket,sg_session)
