@@ -65,5 +65,3 @@ jobs:
         pip install --no-cache-dir --upgrade awscli pandas boto3 sagemaker requests fsspec s3fs tabulate
         pip install -r requirements-dev.txt
         python app2.py
-        cat details.txt >> report.md
-        cml-send-comment report.md 
