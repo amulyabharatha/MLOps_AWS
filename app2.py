@@ -64,7 +64,7 @@ def train_model(sg_session, train_input):
         hyperparameters={"max_leaf_nodes": 30},
         )
     z = sklearn.fit({"train": train_input})
-    print (z)
+    print ("output of train model is:", z)
 
 if __name__ == "__main__":
     sg_session = get_sg_session()
