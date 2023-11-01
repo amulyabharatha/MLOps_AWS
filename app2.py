@@ -34,6 +34,7 @@ INSTANCE_TYPE = os.environ.get("INSTANCE_TYPE", "ml.m5.large")
 def get_sg_session():
     sagemaker_session = sagemaker.Session()
     print ("sagemaker_session is:",sagemaker_session)
+    print("iam role name is:", role)
     return sagemaker_session
 
 
