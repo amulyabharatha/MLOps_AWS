@@ -46,4 +46,4 @@ jobs:
       # Train Model
       - name: Train Model
         run: |
-          python app2.py
+          python app.py
