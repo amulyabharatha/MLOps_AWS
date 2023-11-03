@@ -61,7 +61,7 @@ jobs:
         PREFIX: DEMO-scikit-iris-gus
         IAM_ROLE_NAME: ${{ secrets.AWS_SG_ROLE }}
         GITHUB_SHA: ${{ github.sha }}
-        Model_Path: ${{ vars.model_path }}
+        #Model_Path: ${{ vars.model_path }}
       run: |
         pip install --no-cache-dir --upgrade awscli pandas boto3 sagemaker requests fsspec s3fs tabulate
         pip install -r requirements-dev.txt
