@@ -128,7 +128,7 @@ def serve_saved_model(model_data, test_data):
 if __name__ == "__main__":
     session_details = get_sg_session()
     train_input = load_data(session_details["sg_session"])
-    train_model(sg_session, train_input)
+    train_model(sagemaker_session, train_input)
     #model_data = train_model(session_details, train_input)
     test_data = gen_test_data()
     #serve_model(model_data, test_data)
