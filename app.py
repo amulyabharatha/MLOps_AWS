@@ -122,7 +122,7 @@ def serve_saved_model(model_data, test_data):
     predictor = sklearn_model.deploy(instance_type=INSTANCE_TYPE, initial_instance_count=1)
     print(predictor.predict(test_data["test_X"].values))
     print(test_data["test_y"].values)
-    predictor.delete_endpoint()
+    #predictor.delete_endpoint()
 
 
 if __name__ == "__main__":
@@ -133,5 +133,5 @@ if __name__ == "__main__":
     test_data = gen_test_data()
     #serve_model(model_data, test_data)
     model_data = {"model_path": "s3://sagemaker-us-east-1-657605447075/sagemaker-scikit-learn-2023-11-03-04-17-11-091/output/model.tar.gz"}
-    serve_model(model_data, test_data)
+    #serve_model(model_data, test_data)
     serve_saved_model(model_data, test_data)
